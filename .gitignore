@@ -1,0 +1,29 @@
+# 기본적으로 전부 제외하고, 덱 소스만 명시적으로 추적함
+# 사업계획서·회의록·인물정보가 실수로 올라가는 것을 막기 위한 허용목록 방식
+*
+
+!.gitignore
+!README.md
+
+# 현행 산출물
+!Hub71_Round5_Deck_EN_v4.html
+!Hub71_Round5_Deck_EN_v4.pdf
+!03_Deck_Content_v4.md
+!05_Video_Script_EN_v4.md
+!05_Video_Script_EN_v4.txt
+
+# 근거·요건 문서
+!00_Round5_Requirements.md
+!02_UAE_AI_Child_Regulation.md
+!08_Feedback_Response_Plan.md
+!09_Required_Metrics.md
+!10_Databot_Questions.md
+
+# 빌드 스크립트
+!overflow_check.js
+!pdf_v4.js
+!qa_png_v4.js
+
+# 이미지 에셋
+!img/
+!img/**

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Team Monolith · Codle · Hub71 Round 5 · v2</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  :root{
+    --coral:#E8632C; --coral-deep:#C9501D; --coral-soft:#FCEEE5; --coral-line:#F3CBB2;
+    --ink:#1A2233; --ink-2:#27314A; --slate:#5B6478; --muted:#6B7280;
+    --line:#E6E9EE; --line-2:#EFF1F4; --card:#F5F6F8; --white:#FFFFFF;
+    --mono:'Pretendard Variable','Pretendard',sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    font-family:'Pretendard Variable','Pretendard',-apple-system,'Segoe UI',Arial,sans-serif;
+    color:var(--ink); background:#0E1320;
+    -webkit-font-smoothing:antialiased; line-height:1.4;
+  }
+  .deck{ display:flex; flex-direction:column; align-items:center; gap:16px; padding:20px 0 60px; }
+  .slide{
+    width:1280px; height:720px; background:var(--white);
+    position:relative; overflow:hidden; border-radius:6px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.30), 0 4px 14px rgba(0,0,0,0.14);
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .pad{ padding:40px 58px 50px; height:100%; display:flex; flex-direction:column; }
+
+  /* ---- shared header ---- */
+  .s-label{ font-family:var(--mono); font-size:13px; font-weight:700; color:var(--coral-deep);
+            letter-spacing:2.4px; text-transform:uppercase; display:flex; align-items:center; gap:11px;}
+  .s-label::before{ content:""; width:28px; height:2px; background:var(--coral); display:inline-block;}
+  .s-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin-top:12px;
+           padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .s-title{ font-size:44px; font-weight:800; color:var(--ink); letter-spacing:-1.2px; line-height:1.06; max-width:860px;}
+  .s-sub-r{ font-size:17px; font-weight:600; color:var(--muted); text-align:right; line-height:1.4;
+            max-width:300px; flex-shrink:0;}
+  .body-flex{ flex:1; display:flex; flex-direction:column; justify-content:space-between; padding-top:22px;}
+
+  .slide-num{ position:absolute; right:24px; bottom:16px; font-family:var(--mono); font-size:12px;
+              font-weight:600; color:var(--muted); letter-spacing:1.5px;}
+  .brand-footer{ position:absolute; left:58px; bottom:14px; display:flex; align-items:center; gap:12px;}
+  .brand-footer .cd{ height:14px; width:auto; opacity:0.9;}
+  .brand-footer .div2{ width:1px; height:18px; background:var(--line);}
+  .brand-footer .tmlogo{ height:22px; width:auto;}
+  
+  .src{ position:absolute; left:58px; bottom:36px; font-size:14px; color:#9AA1AC;}
+
+  .strip{ padding:20px 26px; background:var(--ink); border-radius:12px;
+          font-size:23px; font-weight:600; color:#fff; letter-spacing:-0.2px;}
+  .strip b{ color:#F0A47B; font-weight:700;}
+  .strip.above-src{ margin-bottom:28px;}
+
+  /* ---- S5 goal block ---- */
+  .goal{ background:var(--ink); border-radius:12px; padding:12px 22px;}
+  .goal .k{ font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:1.8px;
+            text-transform:uppercase; color:#F0A47B; margin-bottom:5px;}
+  .goal .v{ font-size:19px; font-weight:600; color:#fff; line-height:1.34; letter-spacing:-0.2px;}
+  .goal .v b{ color:#F0A47B; font-weight:800; font-size:25px; letter-spacing:-0.8px;}
+
+  /* PENDING marker — 승인/데이터 확정 시 .pend 클래스만 제거하면 됨 */
+  .pend{ border-bottom:2px dashed var(--coral); }
+
+  /* ---- cover ---- */
+  .s-cover{ color:#fff; background:
+      radial-gradient(ellipse 900px 620px at 100% 80%, rgba(232,99,44,0.55) 0%, rgba(201,80,29,0.28) 22%, transparent 50%),
+      radial-gradient(ellipse 680px 520px at 88% 50%, rgba(232,99,44,0.22) 0%, transparent 60%),
+      linear-gradient(180deg,#0B1020 0%,#0E1320 45%,#141A2B 100%);}
+  .s-cover::after{ content:''; position:absolute; inset:0; pointer-events:none;
+      background:linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.42) 100%);}
+  .s-cover .pad{ padding:56px 72px 50px; justify-content:space-between; position:relative; z-index:2;}
+  .cov-top{ display:flex; justify-content:space-between; align-items:center;}
+  .cov-top .tmw{ height:46px; width:auto; opacity:0.95;}
+  .cov-foot .cdw{ height:22px; width:auto; filter:brightness(0) invert(1); opacity:0.8;}
+  .cov-eyebrow{ font-family:var(--mono); font-size:12px; font-weight:700; color:#F0A47B;
+                letter-spacing:2.6px; text-transform:uppercase; padding:8px 15px;
+                border:1px solid rgba(240,164,123,0.42); border-radius:20px;}
+  .cov-h1{ font-size:58px; font-weight:800; line-height:1.06; letter-spacing:-1.9px; max-width:940px;}
+  .cov-h1 .ac{ color:#F0875A;}
+  .cov-sub{ font-size:21px; color:rgba(255,255,255,0.80); margin-top:20px; max-width:800px; line-height:1.45;}
+  .cov-nums{ display:flex; gap:52px; margin-top:34px; padding-top:24px;
+             border-top:1px solid rgba(255,255,255,0.16);}
+  .cov-nums .c .n{ font-family:var(--mono); font-size:34px; font-weight:700; letter-spacing:-1px; line-height:1;}
+  .cov-nums .c .l{ font-size:13px; color:rgba(255,255,255,0.58); letter-spacing:1.1px;
+                   margin-top:9px; text-transform:uppercase;}
+  .cov-foot{ display:flex; justify-content:space-between; align-items:flex-end;}
+  .cov-foot .l{ font-family:var(--mono); font-size:13px; color:rgba(255,255,255,0.7);
+                letter-spacing:1.5px; text-transform:uppercase; font-weight:600;}
+  .cov-foot .r{ font-size:13px; color:rgba(255,255,255,0.45);}
+
+  /* ---- S1 grade ruler ---- */
+  .ruler .rt{ font-size:19px; font-weight:700; color:var(--ink); margin-bottom:11px;}
+  .ruler .rail{ display:flex; gap:8px;}
+  .ruler .band{ border-radius:13px; padding:20px 20px 22px;}
+  .ruler .band.u{ flex:7; background:linear-gradient(135deg,#FFF3EA,#FCE6D8); border:1px solid var(--coral-line);}
+  .ruler .band.o{ flex:6; background:var(--card); border:1px solid var(--line);}
+  .ruler .cells{ display:flex; gap:5px;}
+  .ruler .cells span{ flex:1; text-align:center; font-family:var(--mono); font-size:21px; font-weight:700;
+                      padding:17px 0; border-radius:8px; background:rgba(255,255,255,0.72); color:var(--ink);}
+  .ruler .band.o .cells span{ background:#fff; color:var(--slate); border:1px solid var(--line);}
+  .ruler .lab{ margin-top:16px;}
+  .ruler .lab b{ display:block; font-size:24px; font-weight:800; color:var(--ink); line-height:1.2;}
+  .ruler .band.u .lab b{ color:var(--coral-deep);}
+  .ruler .lab span{ display:block; font-size:20px; color:var(--slate); margin-top:6px; line-height:1.3;}
+  .ruler .axis{ display:flex; justify-content:space-between; margin-top:10px; font-size:14px; color:#9AA1AC;}
+  .ruler .axis span{ font-family:var(--mono); letter-spacing:0.6px;}
+
+  /* ---- S4 age overlap chart ---- */
+  .ov{ position:relative; padding-top:4px;}
+  .ov-hl{ position:absolute; left:38.9%; width:5.6%; top:0; bottom:46px; z-index:0;
+          background:rgba(232,99,44,0.15); border-left:1px dashed var(--coral-deep);
+          border-right:1px dashed var(--coral-deep);}
+  .ov-track{ position:relative; height:34px; margin-bottom:7px; z-index:1;}
+  .ov-bar{ position:absolute; top:0; height:34px; border-radius:8px; display:flex; align-items:center;
+           padding:0 15px; font-size:16px; font-weight:700; color:#fff; white-space:nowrap;}
+  .ov-bar.eca{ left:0; width:44.4%; background:#4A5468;}
+  .ov-bar.codle{ left:38.9%; width:61.1%; background:var(--coral);}
+  .ov-axis{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:13px;
+            color:#9AA1AC; letter-spacing:0.6px; position:relative; z-index:1;}
+  .ov-note{ margin-top:8px; font-size:17px; color:var(--ink-2); font-weight:600;}
+  .ov-note b{ color:var(--coral-deep); font-weight:800;}
+
+  /* ---- rule table (S1) ---- */
+  .ptable{ width:100%; border-collapse:collapse; margin-bottom:14px;}
+  .ptable th{ font-family:var(--mono); font-size:12px; font-weight:700; color:var(--muted);
+              letter-spacing:1.7px; text-transform:uppercase; text-align:left; padding:0 0 12px;
+              border-bottom:2px solid var(--ink);}
+  .ptable td{ padding:15px 0; border-bottom:1px solid var(--line-2); vertical-align:top;}
+  .ptable tr:last-child td{ border-bottom:none;}
+  .ptable td.a{ width:45%; padding-right:38px; font-size:22px; font-weight:700;
+                color:var(--ink); line-height:1.3;}
+  .ptable td.a em{ font-style:normal; color:var(--coral-deep);}
+  .ptable td.b{ font-size:22px; color:var(--slate); line-height:1.34;}
+  .ptable td.b b{ color:var(--ink); font-weight:700;}
+
+  /* ---- S2 ---- */
+  .two{ display:flex; gap:34px; }
+  .steps{ display:flex; flex-direction:column; gap:10px;}
+  .step{ display:flex; gap:16px; align-items:flex-start;}
+  .step .n{ flex-shrink:0; width:34px; height:34px; border-radius:9px; background:var(--coral);
+            color:#fff; font-family:var(--mono); font-size:17px; font-weight:700;
+            display:flex; align-items:center; justify-content:center; margin-top:2px;}
+  .step .t{ font-size:23px; font-weight:800; color:var(--ink); letter-spacing:-0.4px; line-height:1.22;}
+  .step .d{ font-size:18px; color:var(--slate); line-height:1.34; margin-top:5px;}
+  .shot{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--card);}
+  .shot img{ width:100%; display:block;}
+  .shot .cap{ font-size:13.5px; color:var(--muted); padding:8px 12px; border-top:1px solid var(--line); background:#fff;}
+  .guards{ display:flex; gap:0; border-top:2px solid var(--ink); border-bottom:1px solid var(--line);}
+  .guards div{ flex:1; padding:22px 24px; font-size:21px; font-weight:700; color:var(--ink); line-height:1.3;
+               border-right:1px solid var(--line-2);}
+  .guards div:last-child{ border-right:none;}
+  .guards div:first-child{ padding-left:0;}
+  .floor{ display:flex; gap:14px;}
+  .floor .f{ flex:1; border:1px solid var(--line); border-radius:11px; padding:11px 16px; background:var(--card);}
+  .floor .f.hi{ background:var(--coral-soft); border-color:var(--coral-line);}
+  .floor .k{ font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--muted);
+             letter-spacing:1.6px; text-transform:uppercase; margin-bottom:7px;}
+  .floor .f.hi .k{ color:var(--coral-deep);}
+  .floor .v{ font-size:17.5px; color:var(--ink-2); font-weight:600; line-height:1.34;}
+
+  /* ---- S3 ---- */
+  .numbar{ display:flex; gap:0; border-top:2px solid var(--ink); border-bottom:1px solid var(--line);}
+  .numbar .c{ flex:1; padding:13px 0 12px; border-right:1px solid var(--line-2);}
+  .numbar .c:last-child{ border-right:none;}
+  .numbar .n{ font-family:var(--mono); font-size:33px; font-weight:700; letter-spacing:-1px;
+              color:var(--ink); line-height:1;}
+  .numbar .l{ font-size:14.5px; color:var(--muted); margin-top:8px;}
+  .col-h{ font-family:var(--mono); font-size:12px; font-weight:700; color:var(--muted);
+          letter-spacing:1.7px; text-transform:uppercase; margin-bottom:10px;}
+  .rowlist .r{ display:flex; gap:16px; padding:11px 0; border-bottom:1px solid var(--line-2); align-items:baseline;}
+  .rowlist .r:last-child{ border-bottom:none;}
+  .rowlist .k{ font-family:var(--mono); font-size:14px; font-weight:700; color:var(--coral-deep);
+               letter-spacing:1px; flex-shrink:0; width:96px; text-transform:uppercase;}
+  .rowlist .v{ font-size:19px; color:var(--slate); line-height:1.32;}
+  .rowlist .v b{ color:var(--ink); font-weight:700;}
+  .outc .o{ display:flex; gap:16px; align-items:flex-start; padding:11px 0;
+            border-bottom:1px solid var(--line-2);}
+  .outc .o:first-child{ padding-top:0;}
+  .outc .o:last-child{ border-bottom:none;}
+  .outc .n{ font-family:var(--mono); font-size:36px; font-weight:700; color:var(--coral-deep);
+            width:92px; flex-shrink:0; letter-spacing:-1.4px; line-height:1;}
+  .outc .d{ font-size:18px; color:var(--slate); line-height:1.28;}
+  .outc .d b{ color:var(--ink); font-weight:700;}
+  .outc .s{ font-size:14px; color:#9AA1AC; margin-top:5px;}
+  .outc-note{ font-size:14px; color:#9AA1AC; margin-top:11px; line-height:1.35;}
+  /* 사진은 원본 비율 유지. 높이만 통일하고 폭은 비율대로 두며, 남는 폭은 우측 캡션 블록이 채움 */
+  .photorow{ display:flex; gap:26px; align-items:flex-end;}
+  .photos{ display:flex; gap:10px; flex-shrink:0;}
+  .photos img{ height:130px; width:auto; border-radius:9px; display:block;}
+  .photonote{ padding-bottom:3px;}
+  .photonote .names{ font-size:14.5px; color:var(--slate); line-height:1.4;}
+  .photonote .src2{ font-size:13.5px; color:#9AA1AC; line-height:1.35; margin-top:8px;}
+
+  /* ---- S4 ---- */
+  .pts{ display:flex; flex-direction:column; gap:18px;}
+  .pt .t{ font-size:20px; font-weight:800; color:var(--ink); letter-spacing:-0.4px; line-height:1.22;}
+  .pt .d{ font-size:17.5px; color:var(--slate); line-height:1.32; margin-top:4px;}
+  .panel{ flex:1; border-radius:12px; padding:18px 22px;}
+  .panel.l{ background:var(--card); border:1px solid var(--line);}
+  .panel.r{ background:var(--coral-soft); border:1px solid var(--coral-line);}
+
+  /* ---- S5 ---- */
+  .routes{ width:100%; border-collapse:collapse;}
+  .routes th{ font-family:var(--mono); font-size:12px; font-weight:700; color:var(--muted);
+              letter-spacing:1.7px; text-transform:uppercase; text-align:left; padding:0 0 11px;
+              border-bottom:2px solid var(--ink);}
+  .routes td{ padding:8px 0; border-bottom:1px solid var(--line-2); vertical-align:top;}
+  .routes tr:last-child td{ border-bottom:none;}
+  .routes td.a{ width:29%; padding-right:24px;}
+  .routes td.a .n{ font-size:21px; font-weight:800; color:var(--ink); line-height:1.2;}
+  .routes td.a .s{ font-size:14px; color:var(--muted); margin-top:4px;}
+  .routes td.b{ font-size:19px; color:var(--slate); line-height:1.3; padding-right:24px;}
+  .routes td.b b{ color:var(--ink); font-weight:700;}
+  .routes td.c{ width:16%; font-family:var(--mono); font-size:17px; font-weight:700; color:var(--coral-deep);}
+  .sofar-row{ display:flex; gap:13px;}
+  .sofar-row .c{ flex:1; background:var(--card); border:1px solid var(--line);
+                 border-radius:11px; padding:8px 13px;}
+  .sofar-row .k{ font-family:var(--mono); font-size:12px; font-weight:700; color:var(--coral-deep);
+                 letter-spacing:1.4px; text-transform:uppercase; margin-bottom:5px;}
+  .sofar-row .v{ font-size:15px; color:var(--slate); line-height:1.32;}
+  .sofar-row .v b{ color:var(--ink); font-weight:700;}
+
+  /* ---- S6 ---- */
+  .team{ display:flex; gap:16px;}
+  .team .m{ flex:1; text-align:center;}
+  .team .m .ph2{ width:112px; height:112px; border-radius:50%; overflow:hidden; margin:0 auto 13px;
+                 border:2px solid var(--line); background:var(--card); position:relative;}
+  .team .m .ph2 img{ width:100%; height:100%; object-fit:cover; display:block;}
+  .team .m .nm{ font-size:20px; font-weight:800; color:var(--ink); letter-spacing:-0.3px;}
+  .team .m .ro{ font-size:15px; font-weight:700; color:var(--coral-deep); margin-top:4px;}
+  .team .m .de{ font-size:15.5px; color:var(--slate); margin-top:7px; line-height:1.32;}
+  .badge{ display:inline-block; font-family:var(--mono); font-size:11px; font-weight:700;
+          letter-spacing:1.2px; text-transform:uppercase; color:#fff; background:var(--coral);
+          padding:4px 9px; border-radius:11px; margin-top:8px;}
+  .evid{ display:flex; gap:0; border-top:2px solid var(--ink); border-bottom:1px solid var(--line);}
+  .evid .c{ flex:1; padding:17px 20px 16px; border-right:1px solid var(--line-2);}
+  .evid .c:first-child{ padding-left:0;}
+  .evid .c:last-child{ border-right:none;}
+  .evid .n{ font-family:var(--mono); font-size:29px; font-weight:700; color:var(--ink); line-height:1;}
+  .evid .tt{ font-size:19px; font-weight:800; color:var(--ink); line-height:1.2;}
+  .evid .l{ font-size:14.5px; color:var(--muted); margin-top:8px; line-height:1.3;}
+
+  @page{ size:1280px 720px; margin:0; }
+  @media print{
+    body{ background:#fff;}
+    .deck{ gap:0; padding:0;}
+    .slide{ border-radius:0; box-shadow:none; page-break-after:always; break-after:page;}
+    .slide:last-child{ page-break-after:auto;}
+  }
+
+  /* ---- 이유 목록 (S3 · S4 공용) ---- */
+  .why{ display:flex; flex-direction:column; gap:56px;}
+  .why .w{ display:flex; gap:18px; align-items:flex-start;}
+  .why .w .no{ flex-shrink:0; font-family:var(--mono); font-size:18px; font-weight:700;
+               color:var(--coral-deep); letter-spacing:1.4px; width:36px; padding-top:7px;}
+  .why .w .t{ font-size:31px; font-weight:800; color:var(--ink); letter-spacing:-0.6px; line-height:1.2;}
+  .why .w .d{ font-size:21px; color:var(--slate); line-height:1.32; margin-top:7px;}
+  .why .w .d b{ color:var(--coral-deep); font-weight:700;}
+  .evbar{ display:flex; align-items:center; gap:30px; background:var(--coral-soft);
+           border:1px solid var(--coral-line); border-radius:14px; padding:26px 32px;}
+  .evbar .n{ font-family:var(--mono); font-size:76px; font-weight:700; color:var(--coral-deep);
+             line-height:0.9; letter-spacing:-3px; flex-shrink:0;}
+  .evbar .t{ font-size:24px; color:var(--ink-2); line-height:1.32; font-weight:600;}
+  .evbar .t b{ color:var(--ink); font-weight:800;}
+  .evbar .s{ font-size:15px; color:#9AA1AC; margin-top:9px;}
+  .bigline{ font-size:26px; font-weight:700; color:var(--ink); line-height:1.3; letter-spacing:-0.5px;}
+  .bigline b{ color:var(--coral-deep);}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ============ COVER ============ -->
+<section class="slide s-cover">
+  <div class="pad">
+    <div class="cov-top">
+      <img class="tmw" src="img/tm_logo_white.png" alt="Team Monolith" />
+      <span class="cov-eyebrow">Hub71 · Round 5</span>
+    </div>
+    <div>
+      <h1 class="cov-h1">A national AI rollout,<br/><span class="ac">delivered once before</span></h1>
+      <p class="cov-sub">Team Monolith builds AI learning infrastructure for schools. Korea's Ministry of Education certified our platform, and it now runs in 800+ schools</p>
+      <div class="cov-nums">
+        <div class="c"><div class="n">800+</div><div class="l">Schools</div></div>
+        <div class="c"><div class="n">166,053</div><div class="l">Students</div></div>
+        <div class="c"><div class="n">96,900</div><div class="l">Teachers trained</div></div>
+        <div class="c"><div class="n">Profitable</div><div class="l">On a single seed round</div></div>
+      </div>
+    </div>
+    <div class="cov-foot">
+      <img class="cdw" src="img/codle_logo.png" alt="Codle" />
+      <div class="r">Abu Dhabi, 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S1 · THE MANDATE ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">01 · The Mandate</div>
+    <div class="s-head">
+      <h2 class="s-title">AI made compulsory,<br/>kindergarten to grade twelve</h2>
+      <div class="s-sub-r">Now every school,<br/>and different rules under thirteen</div>
+    </div>
+    <div class="body-flex">
+      <div class="ruler">
+        <div class="rail">
+          <div class="band u">
+            <div class="cells"><span>KG</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+            <div class="lab"><b>Under 13</b><span>Open AI tools are not permitted</span></div>
+          </div>
+          <div class="band o">
+            <div class="cells"><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+            <div class="lab"><b>Grade 7 — 12</b><span>Supervised use of approved tools</span></div>
+          </div>
+        </div>
+        <div class="axis"><span>AGE 4</span><span>AGE 13</span><span>AGE 18</span></div>
+      </div>
+
+      <div class="guards">
+        <div>Every public and private school</div>
+        <div>Assessed through projects</div>
+        <div>Open AI tools are not permitted under 13</div>
+      </div>
+
+      <div class="strip above-src"><b>2 September 2026</b> — after a year of positive results in public schools, the Cabinet extended the AI curriculum to <b>every private school</b></div>
+    </div>
+  </div>
+  <div class="src">UAE Cabinet, 2025 and 2 September 2026 (mediaoffice.ae) · UAE Ministry of Education, 2026</div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">01</div>
+</section>
+
+<!-- ============ S2 · WE HAVE DONE THIS ONCE ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">02 · We Have Done This Once</div>
+    <div class="s-head">
+      <h2 class="s-title">A national curriculum change,<br/>already delivered</h2>
+      <div class="s-sub-r">Korea, two years<br/>ahead of here</div>
+    </div>
+    <div class="body-flex">
+      <div class="numbar">
+        <div class="c"><div class="n">800+</div><div class="l">Schools in Korea</div></div>
+        <div class="c" style="padding-left:22px;"><div class="n">166,053</div><div class="l">Active students</div></div>
+        <div class="c" style="padding-left:22px;"><div class="n">96,900</div><div class="l">Teachers trained to date</div></div>
+        <div class="c" style="padding-left:22px;"><div class="n">2024</div><div class="l">Passed the Ministry's certification</div></div>
+      </div>
+
+      <div class="two">
+        <div style="flex:1.35;">
+          <div class="bigline">We went from certification to <b>800 schools</b> inside two years</div>
+          <div class="strip" style="margin-top:20px;">The UAE is now making the same move. <b>We would like to repeat this here.</b></div>
+        </div>
+        <div style="flex:0.72;">
+          <div class="shot">
+            <img src="img/shot_socratic.png" alt="Codle in class" />
+            <div class="cap">A Codle lesson in class</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">02</div>
+</section>
+
+<!-- ============ S3 · WHY IT WORKED IN KOREA ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">03 · Why It Worked in Korea</div>
+    <div class="s-head">
+      <h2 class="s-title">Three things made it work</h2>
+      <div class="s-sub-r">The same three we<br/>would use here</div>
+    </div>
+    <div class="body-flex">
+      <div class="why">
+        <div class="w">
+          <div class="no">01</div>
+          <div>
+            <div class="t">Codle, our classroom platform</div>
+            <div class="d">Teachers run it easily and effectively, and <b>assessment is built from the data it records</b></div>
+          </div>
+        </div>
+        <div class="w">
+          <div class="no">02</div>
+          <div>
+            <div class="t">Teacher training in the same package</div>
+            <div class="d"><b>96,900 teachers trained</b> in Korea to date, so schools onboard quickly</div>
+          </div>
+        </div>
+        <div class="w">
+          <div class="no">03</div>
+          <div>
+            <div class="t">Codle's content management system</div>
+            <div class="d">Our content team <b>builds, updates and ships lessons quickly</b>, and 430+ are complete across K-12</div>
+          </div>
+        </div>
+      </div>
+      <div class="evbar">
+        <div class="n">87%</div>
+        <div>
+          <div class="t">of the times a student got something wrong, <b>they came back and solved it</b></div>
+          <div class="s">1.19 million return attempts · 91,103 students · Codle platform data, 2022–2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">03</div>
+</section>
+
+<!-- ============ S4 · WHY IT WILL WORK HERE ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">04 · Why It Will Work Here</div>
+    <div class="s-head">
+      <h2 class="s-title">The same conditions,<br/>already in place</h2>
+      <div class="s-sub-r">And one Abu Dhabi<br/>does not yet have</div>
+    </div>
+    <div class="body-flex">
+      <div class="why" style="gap:20px;">
+        <div class="w">
+          <div class="no">A</div>
+          <div>
+            <div class="t">The platform already fits the rule, from this week</div>
+            <div class="d">The teacher opens the lesson and the AI asks questions rather than giving answers, so <b>a child under thirteen works without an open chatbot</b></div>
+          </div>
+        </div>
+        <div class="w">
+          <div class="no">B</div>
+          <div>
+            <div class="t">Training is already running here</div>
+            <div class="d">We have already trained <b>53 teachers</b> across five UAE schools</div>
+          </div>
+        </div>
+        <div class="w">
+          <div class="no">C</div>
+          <div>
+            <div class="t">Anjal Z and the Early Childhood Authority</div>
+            <div class="d">A <b>child development standard</b> to design the youngest lessons against, and a content system to build them on</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ov">
+        <div class="ov-hl"></div>
+        <div class="ov-track"><div class="ov-bar eca">Anjal Z · ECA — to age 8</div></div>
+        <div class="ov-track"><div class="ov-bar codle">Codle — age 7 to 18</div></div>
+        <div class="ov-axis"><span>AGE 0</span><span>AGE 9</span><span>AGE 18</span></div>
+        <div class="ov-note">They overlap at <b>ages 7 and 8</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">04</div>
+</section>
+
+<!-- ============ S5 · REPLICATING IT HERE ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">05 · Replicating It Here</div>
+    <div class="s-head">
+      <h2 class="s-title">Korea's playbook,<br/>run in Abu Dhabi</h2>
+      <div class="s-sub-r">Teachers first,<br/>then classrooms</div>
+    </div>
+    <div class="body-flex">
+      <table class="routes">
+        <tr><th>Where we would start</th><th>What we would do</th><th>When</th></tr>
+        <tr>
+          <td class="a"><div class="n">ADEK schools</div><div class="s">Department of Education and Knowledge</div></td>
+          <td class="b"><b>Teacher training inside Term 1</b>, then a first pilot</td>
+          <td class="c">Term 1</td>
+        </tr>
+        <tr>
+          <td class="a"><div class="n">Aldar Education</div><div class="s">31 schools, 38,000+ students</div></td>
+          <td class="b">Ask for <b>one school, three weeks, one class</b>. Then school by school</td>
+          <td class="c">Term 1 → 2</td>
+        </tr>
+        <tr>
+          <td class="a"><div class="n"><span class="pend">ECA network</span></div><div class="s">Early years settings</div></td>
+          <td class="b"><span class="pend"><b>Age 4 to 6 design sessions</b> with ECA</span></td>
+          <td class="c">Through<br/>the programme</td>
+        </tr>
+      </table>
+
+      <div class="photorow">
+        <div class="photos">
+          <img src="img/field_bisad.png" alt="" />
+          <img src="img/field_gems.jpg" alt="" />
+          <img src="img/exp_north_star.jpg" alt="" />
+        </div>
+        <div class="photonote">
+          <div class="names"><b>Already underway</b> — teacher training across five UAE schools, and a three-week student pilot at the British International School Abu Dhabi</div>
+          <div class="src2">Yeongbin Bae, co-founder, resident in Abu Dhabi from September 2026</div>
+        </div>
+      </div>
+
+      <div class="goal">
+        <div class="k">Target — by the end of the programme</div>
+        <div class="v"><b>500+</b> teachers onboarded · <b>150</b> through the full course · <b>4</b> schools on their own budget</div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">05</div>
+</section>
+
+<!-- ============ S6 · WHY THIS TEAM ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="s-label">06 · Why This Team</div>
+    <div class="s-head">
+      <h2 class="s-title">The team that did it<br/>the first time</h2>
+      <div class="s-sub-r">Team Monolith,<br/>the company behind Codle</div>
+    </div>
+    <div class="body-flex">
+      <div class="team">
+        <div class="m">
+          <div class="ph2"><img src="img/ceo.png" alt="" /></div>
+          <div class="nm">Jonghyun Jun</div>
+          <div class="ro">CEO · Co-founder</div>
+          <div class="de">Ex-BNP Paribas, Societe Generale</div>
+        </div>
+        <div class="m">
+          <div class="ph2"><img src="img/cto.png" alt="" /></div>
+          <div class="nm">Changhwan Lee</div>
+          <div class="ro">CTO · Co-founder</div>
+          <div class="de">Ex-Microsoft Research Asia</div>
+        </div>
+        <div class="m">
+          <div class="ph2"><img src="img/eom_crop.png" alt="" /></div>
+          <div class="nm">Eunsang Eom</div>
+          <div class="ro">Co-founder</div>
+          <div class="de">Researcher, Korea University</div>
+        </div>
+        <div class="m">
+          <div class="ph2"><img src="img/bae.png" alt="" /></div>
+          <div class="nm">Yeongbin Bae</div>
+          <div class="ro">Co-founder</div>
+          <div class="de">Data and AI infrastructure</div>
+          <span class="badge">Resident · Abu Dhabi</span>
+        </div>
+        <div class="m">
+          <div class="ph2"><img src="img/seoyoon.png" alt="" /></div>
+          <div class="nm">Seoyoon Lee</div>
+          <div class="ro">Head of Global Operations</div>
+          <div class="de">School partnerships across the GCC</div>
+        </div>
+      </div>
+
+      <div class="evid">
+        <div class="c"><div class="n">27</div><div class="l">Full-time team</div></div>
+        <div class="c"><div class="n">4</div><div class="l">Patents on the core engine</div></div>
+        <div class="c"><div class="tt">Certified by Korea's<br/>Ministry of Education</div></div>
+        <div class="c"><div class="tt">Profitable on a<br/>single seed round</div></div>
+      </div>
+
+      <div class="strip">Built once for a national rollout. <b>Ready to build the next one here.</b></div>
+    </div>
+  </div>
+  <div class="brand-footer"><img class="cd" src="img/codle_logo.png" alt="Codle" /><span class="div2"></span><img class="tmlogo" src="img/tm_mark.png" alt="Team Monolith" /></div>
+  <div class="slide-num">06</div>
+</section>
+
+</div>
+</body>
+</html>
