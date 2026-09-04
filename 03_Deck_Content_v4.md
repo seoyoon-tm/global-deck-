@@ -102,7 +102,7 @@ Title **Korea's playbook, run in Abu Dhabi** / Sub `Teachers first, then classro
 
 Title **The team that did it the first time** / Sub `Team Monolith, the company behind Codle`
 
-- 창업자 5인: Jonghyun Jun(CEO, Ex-BNP Paribas·Societe Generale) · Changhwan Lee(CTO, Ex-Microsoft Research Asia) · Eunsang Eom(Researcher, Korea University) · Yeongbin Bae(Data and AI infrastructure, `Resident · Abu Dhabi` 배지) · Seoyoon Lee(Head of Global Operations, GCC)
+- 창업자 5인: Jonghyun Jun(CEO, Ex-BNP Paribas·Societe Generale) · Changhwan Lee(CTO, Ex-Microsoft Research Asia) · Eunsang Eom(Researcher, Korea University) · Yeongbin Bae(Co-founder · Senior Researcher, Data and AI infrastructure, `Resident · Abu Dhabi` 배지) · Seoyoon Lee(Head of Global Operations, GCC)
 - 근거 바: `27` Full-time team · `4` Patents on the core engine · Certified by Korea's Ministry of Education · Profitable on a single seed round
 - 스트립: Built once for a national rollout. **Ready to build the next one here.**
 
